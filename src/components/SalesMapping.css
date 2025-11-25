@@ -80,10 +80,50 @@
 @media (max-width: 768px) {
   .world-map {
     height: 150px;
+    margin: 16px 0;
+  }
+
+  .region-marker {
+    width: 10px;
+    height: 10px;
   }
 
   .regions-legend {
-    flex-direction: column;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .region-item {
+    font-size: 11px;
+  }
+
+  .region-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .world-map {
+    height: 130px;
+  }
+
+  .region-marker {
+    width: 8px;
+    height: 8px;
+  }
+
+  .regions-legend {
+    gap: 10px;
+  }
+
+  .region-item {
+    font-size: 10px;
+  }
+
+  .region-dot {
+    width: 7px;
+    height: 7px;
   }
 }
