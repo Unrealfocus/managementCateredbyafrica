@@ -1,11 +1,11 @@
 import React from 'react'
-import MarketingDashboard from './components/MarketingDashboard'
+import SalesDashboard from './components/SalesDashboard'
 import './App.css'
 
 function App() {
   return (
     <div className="app">
-      <MarketingDashboard />
+      <SalesDashboard />
     </div>
   )
 }
