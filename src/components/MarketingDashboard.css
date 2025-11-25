@@ -48,6 +48,9 @@
   border-bottom: 3px solid transparent;
   transition: all 0.2s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-tab:hover {
