@@ -1,0 +1,129 @@
+.volume-service {
+  height: 100%;
+}
+
+.vs-stats {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.vs-stat-card {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.vs-stat-card.volume {
+  background: #dbeafe;
+}
+
+.vs-stat-card.service {
+  background: #d1fae5;
+}
+
+.vs-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.vs-stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.vs-bar-chart {
+  display: flex;
+  gap: 8px;
+  height: 150px;
+  align-items: flex-end;
+  padding: 16px 0;
+  margin-bottom: 16px;
+}
+
+.vs-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.vs-bars {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  width: 100%;
+  justify-content: center;
+}
+
+.vs-bar {
+  flex: 1;
+  max-width: 18px;
+  border-radius: 4px 4px 0 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  min-height: 8px;
+}
+
+.vs-bar:hover {
+  opacity: 0.8;
+}
+
+.volume-bar {
+  background: #3b82f6;
+}
+
+.service-bar {
+  background: #10b981;
+}
+
+.vs-bar-label {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.vs-legend {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.vs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.vs-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.vs-legend-dot.volume {
+  background: #3b82f6;
+}
+
+.vs-legend-dot.service {
+  background: #10b981;
+}
+
+@media (max-width: 768px) {
+  .vs-bar-chart {
+    height: 120px;
+  }
+
+  .vs-stats {
+    flex-direction: column;
+  }
+}
