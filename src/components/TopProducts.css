@@ -79,12 +79,17 @@
 @media (max-width: 768px) {
   .products-header,
   .product-row {
-    grid-template-columns: 30px 1fr 80px 60px;
+    grid-template-columns: 30px 1fr 60px;
     gap: 8px;
+    padding: 12px 6px;
   }
 
   .col-name {
     font-size: 12px;
+  }
+
+  .col-rank {
+    font-size: 13px;
   }
 
   .col-popularity {
@@ -93,5 +98,49 @@
 
   .products-header .col-popularity {
     display: none;
+  }
+
+  .col-sales {
+    text-align: right;
+  }
+
+  .sales-badge {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+
+  .products-header {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-list {
+    margin-top: 16px;
+  }
+
+  .products-header,
+  .product-row {
+    grid-template-columns: 25px 1fr 50px;
+    gap: 6px;
+    padding: 10px 4px;
+  }
+
+  .col-name {
+    font-size: 11px;
+  }
+
+  .col-rank {
+    font-size: 12px;
+  }
+
+  .sales-badge {
+    padding: 2px 8px;
+    font-size: 10px;
+  }
+
+  .products-header {
+    font-size: 10px;
+    padding: 10px 4px;
   }
 }

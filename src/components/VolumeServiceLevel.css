@@ -119,11 +119,88 @@
 }
 
 @media (max-width: 768px) {
-  .vs-bar-chart {
-    height: 120px;
-  }
-
   .vs-stats {
     flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .vs-stat-card {
+    padding: 14px;
+  }
+
+  .vs-stat-value {
+    font-size: 22px;
+  }
+
+  .vs-stat-label {
+    font-size: 12px;
+  }
+
+  .vs-bar-chart {
+    height: 120px;
+    gap: 6px;
+    padding: 12px 0;
+  }
+
+  .vs-bar {
+    max-width: 16px;
+  }
+
+  .vs-bar-label {
+    font-size: 10px;
+  }
+
+  .vs-legend-item {
+    font-size: 11px;
+  }
+
+  .vs-legend-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vs-stats {
+    gap: 10px;
+  }
+
+  .vs-stat-card {
+    padding: 12px;
+  }
+
+  .vs-stat-value {
+    font-size: 20px;
+  }
+
+  .vs-stat-label {
+    font-size: 11px;
+  }
+
+  .vs-bar-chart {
+    height: 100px;
+    gap: 4px;
+  }
+
+  .vs-bar {
+    max-width: 12px;
+  }
+
+  .vs-bars {
+    gap: 2px;
+  }
+
+  .vs-bar-label {
+    font-size: 9px;
+    margin-top: 6px;
+  }
+
+  .vs-legend-item {
+    font-size: 10px;
+  }
+
+  .vs-legend {
+    gap: 12px;
   }
 }

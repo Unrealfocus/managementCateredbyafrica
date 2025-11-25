@@ -90,9 +90,71 @@
 @media (max-width: 768px) {
   .satisfaction-stats {
     flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .stat-value {
+    font-size: 15px;
+  }
+
+  .stat-label {
+    font-size: 11px;
   }
 
   .area-chart {
     height: 120px;
+    margin: 16px 0;
+  }
+
+  .legend-item {
+    font-size: 11px;
+  }
+
+  .legend-line {
+    width: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .satisfaction-stats {
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 10px;
+  }
+
+  .stat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .area-chart {
+    height: 100px;
+  }
+
+  .legend-item {
+    font-size: 10px;
+  }
+
+  .legend-line {
+    width: 18px;
+    height: 2px;
   }
 }

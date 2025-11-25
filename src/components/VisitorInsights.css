@@ -69,10 +69,63 @@
 
 @media (max-width: 768px) {
   .insights-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .stat-value {
+    font-size: 16px;
   }
 
   .line-chart {
     height: 150px;
+    margin: 16px 0;
+  }
+
+  .chart-x-axis {
+    font-size: 10px;
+  }
+
+  .legend-item {
+    font-size: 11px;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .chart-legend {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .insights-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat-item {
+    padding: 8px;
+    background: #f9fafb;
+    border-radius: 8px;
+  }
+
+  .line-chart {
+    height: 130px;
+  }
+
+  .chart-x-axis {
+    font-size: 9px;
+  }
+
+  .legend-item {
+    font-size: 10px;
   }
 }
