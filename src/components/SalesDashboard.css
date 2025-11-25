@@ -299,3 +299,25 @@
     grid-column: span 1;
   }
 }
+
+.coming-soon {
+  background: white;
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+
+.coming-soon h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.coming-soon p {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
