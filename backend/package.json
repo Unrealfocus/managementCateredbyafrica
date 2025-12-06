@@ -1,0 +1,52 @@
+{
+  "name": "cateredbyafrica-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Catered by Africa Sales & Customer Management Dashboard",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.js",
+    "migrate": "node src/scripts/migrate.js",
+    "seed": "node src/scripts/seed.js"
+  },
+  "keywords": [
+    "dashboard",
+    "ecommerce",
+    "crm",
+    "api"
+  ],
+  "author": "Catered by Africa",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "pg-promise": "^11.5.4",
+    "ioredis": "^5.3.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "@sendgrid/mail": "^7.7.0",
+    "twilio": "^4.19.0",
+    "socket.io": "^4.6.2",
+    "express-validator": "^7.0.1",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
