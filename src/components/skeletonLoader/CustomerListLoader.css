@@ -1,0 +1,51 @@
+/* Skeleton Loader Styles */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite linear;
+    border-radius: 0.5rem;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 1rem;
+    width: 80%;
+}
+
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.skeleton-row {
+    display: table-row;
+    width: 100%;
+}
+
+.skeleton-cell {
+    padding: 1rem;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.skeleton-table tbody tr {
+    height: 72px;
+    /* Match your real row height */
+}
+
+/* Optional: Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .skeleton {
+        background: linear-gradient(90deg, #2d3748 25%, #1a202c 50%, #2d3748 75%);
+    }
+}

@@ -9,14 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.16",
+    "axios": "^1.13.2",
+    "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1"
+    "react-hook-form": "^7.70.0",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.11.0",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "sass": "^1.97.1",
     "vite": "^4.4.5"
   }
 }

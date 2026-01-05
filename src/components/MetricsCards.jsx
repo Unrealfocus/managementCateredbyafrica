@@ -1,7 +1,8 @@
 import React from 'react';
 import './MetricsCards.css';
 
-const MetricsCards = () => {
+const MetricsCards = (data) => {
+
   const metrics = [
     {
       id: 1,
@@ -23,8 +24,8 @@ const MetricsCards = () => {
     },
     {
       id: 3,
-      title: 'Product Sold',
-      value: '5',
+      title: 'Failed Email',
+      value: `${data.data?.emails_failed}`,
       change: '+1.2% from yesterday',
       icon: 'product',
       color: '#d1fae5',
@@ -33,7 +34,7 @@ const MetricsCards = () => {
     {
       id: 4,
       title: 'New Customers',
-      value: '8',
+      value: `${data.data?.customer_count}`,
       change: '+0.5% from yesterday',
       icon: 'customers',
       color: '#e0e7ff',

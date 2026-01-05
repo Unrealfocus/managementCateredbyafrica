@@ -13,9 +13,14 @@ import CustomerSegmentation from './CustomerSegmentation';
 import EmailSection from './EmailSection';
 import MessagingSection from './MessagingSection';
 import AutomationSection from './AutomationSection';
+import Loader from './Loader';
+import useDashboardQuery from "../hook/useDashboardQuery"
+import ErrorMessage from './errorMessages/errorMessage';
 
 const SalesDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const { data, isLoading, isError, error } = useDashboardQuery();
+  // const [loading, setLoading] = useState(false);
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -87,7 +92,10 @@ const SalesDashboard = () => {
     return icons[iconType] || icons.dashboard;
   };
 
+  // if (isError) return (<Unauthorized />)
+
   return (
+
     <div className="sales-dashboard">
       <aside className="sidebar">
         <div className="sidebar-header">
@@ -136,99 +144,103 @@ const SalesDashboard = () => {
           </button>
         </div>
       </aside>
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (<ErrorMessage error={error} />) :
+        <main className="main-content">
 
-      <main className="main-content">
-        <header className="dashboard-header">
-          <h1>
-            {activeTab === 'dashboard' && 'Dashboard'}
-            {activeTab === 'customers' && 'Customers'}
-            {activeTab === 'segmentation' && 'Customer Segmentation'}
-            {activeTab === 'email' && 'Email Marketing'}
-            {activeTab === 'messages' && 'Messages'}
-            {activeTab === 'automation' && 'Automation'}
-            {activeTab === 'sales-report' && 'Sales Report'}
-            {activeTab === 'settings' && 'Settings'}
-          </h1>
-          <div className="header-actions">
-            <div className="search-bar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-              <input type="text" placeholder="Search here..." />
-            </div>
-            <div className="language-selector">
-              <span className="flag">🇺🇸</span>
-              <span>Eng (US)</span>
-            </div>
-            <div className="notification-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
-              <span className="notification-badge">3</span>
-            </div>
-            <div className="user-profile">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User" />
-              <div>
-                <div className="user-name">Musfiq</div>
-                <div className="user-role">Admin</div>
+          <header className="dashboard-header">
+            <h1>
+              {activeTab === 'dashboard' && 'Dashboard'}
+              {activeTab === 'customers' && 'Customers'}
+              {activeTab === 'segmentation' && 'Customer Segmentation'}
+              {activeTab === 'email' && 'Email Marketing'}
+              {activeTab === 'messages' && 'Messages'}
+              {activeTab === 'automation' && 'Automation'}
+              {activeTab === 'sales-report' && 'Sales Report'}
+              {activeTab === 'settings' && 'Settings'}
+            </h1>
+            <div className="header-actions">
+              <div className="search-bar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" placeholder="Search here..." />
+              </div>
+              <div className="language-selector">
+                <span className="flag">🇺🇸</span>
+                <span>Eng (US)</span>
+              </div>
+              <div className="notification-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span className="notification-badge">3</span>
+              </div>
+              <div className="user-profile">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User" />
+                <div>
+                  <div className="user-name">Musfiq</div>
+                  <div className="user-role">Admin</div>
+                </div>
               </div>
             </div>
+          </header>
+
+          <div className="dashboard-content">
+            {activeTab === 'dashboard' && (
+              <>
+                <MetricsCards data={data} />
+                <div className="dashboard-grid">
+                  <div className="chart-container large">
+                    <RevenueChart />
+                  </div>
+                  <div className="chart-container">
+                    <VisitorInsights />
+                  </div>
+                  <div className="chart-container">
+                    <CustomerSatisfaction />
+                  </div>
+                  <div className="chart-container">
+                    <TargetVsReality />
+                  </div>
+                  <div className="chart-container">
+                    <TopProducts />
+                  </div>
+                  <div className="chart-container">
+                    <SalesMapping />
+                  </div>
+                  <div className="chart-container">
+                    <VolumeServiceLevel />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeTab === 'customers' && <CustomerList />}
+            {activeTab === 'segmentation' && <CustomerSegmentation />}
+            {activeTab === 'email' && <EmailSection />}
+            {activeTab === 'messages' && <MessagingSection />}
+            {activeTab === 'automation' && <AutomationSection />}
+
+            {activeTab === 'sales-report' && (
+              <div className="coming-soon">
+                <h2>Sales Report</h2>
+                <p>Detailed sales reports and analytics coming soon!</p>
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="coming-soon">
+                <h2>Settings</h2>
+                <p>Application settings coming soon!</p>
+              </div>
+            )}
           </div>
-        </header>
-
-        <div className="dashboard-content">
-          {activeTab === 'dashboard' && (
-            <>
-              <MetricsCards />
-              <div className="dashboard-grid">
-                <div className="chart-container large">
-                  <RevenueChart />
-                </div>
-                <div className="chart-container">
-                  <VisitorInsights />
-                </div>
-                <div className="chart-container">
-                  <CustomerSatisfaction />
-                </div>
-                <div className="chart-container">
-                  <TargetVsReality />
-                </div>
-                <div className="chart-container">
-                  <TopProducts />
-                </div>
-                <div className="chart-container">
-                  <SalesMapping />
-                </div>
-                <div className="chart-container">
-                  <VolumeServiceLevel />
-                </div>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'customers' && <CustomerList />}
-          {activeTab === 'segmentation' && <CustomerSegmentation />}
-          {activeTab === 'email' && <EmailSection />}
-          {activeTab === 'messages' && <MessagingSection />}
-          {activeTab === 'automation' && <AutomationSection />}
-
-          {activeTab === 'sales-report' && (
-            <div className="coming-soon">
-              <h2>Sales Report</h2>
-              <p>Detailed sales reports and analytics coming soon!</p>
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="coming-soon">
-              <h2>Settings</h2>
-              <p>Application settings coming soon!</p>
-            </div>
-          )}
-        </div>
-      </main>
+        </main>
+      }
     </div>
   );
 };
