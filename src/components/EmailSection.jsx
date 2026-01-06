@@ -1,51 +1,62 @@
-import React, { useState } from 'react'
-import './EmailSection.css'
+import React, { useRef, useState } from 'react';
+import './EmailSection.css';
+import EmailEditor from 'react-email-editor';
 
-const EmailSection = () => {
+const EmailEditorSection = () => {
+  const emailEditorRef = useRef(null);
+  const [subject, setSubject] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState('blank');
   const [emailData, setEmailData] = useState({
     recipient: 'all',
     subject: '',
     body: '',
-    template: 'blank'
-  })
-
-  const [sentEmails, setSentEmails] = useState([
-    {
-      id: 1,
-      subject: 'Welcome to Catered by Africa!',
-      recipients: 15,
-      sentDate: '2025-11-25 10:30',
-      openRate: '68%',
-      clickRate: '24%',
-      status: 'sent'
-    },
-    {
-      id: 2,
-      subject: 'Special Offer: 20% Off Your First Order',
-      recipients: 8,
-      sentDate: '2025-11-24 14:15',
-      openRate: '85%',
-      clickRate: '42%',
-      status: 'sent'
-    },
-    {
-      id: 3,
-      subject: 'New Menu Items Available',
-      recipients: 24,
-      sentDate: '2025-11-23 09:00',
-      openRate: '72%',
-      clickRate: '31%',
-      status: 'sent'
+    template: 'blank',
+    customEmails: '' // ← Add this
+  });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEmailData(prev => ({ ...prev, [name]: value }));
+  };
+  const handleSendEmail = () => {
+    const unlayer = emailEditorRef.current?.editor;
+    if (!unlayer) {
+      alert('Editor not ready');
+      return;
     }
-  ])
 
-  const templates = [
-    { id: 'blank', name: 'Blank Email', icon: '📄' },
-    { id: 'welcome', name: 'Welcome Email', icon: '👋' },
-    { id: 'promotion', name: 'Promotional Offer', icon: '🎁' },
-    { id: 'reminder', name: 'Order Reminder', icon: '🔔' },
-    { id: 'newsletter', name: 'Newsletter', icon: '📰' }
-  ]
+    unlayer.exportHtml((data) => {
+      const { html, design } = data;
+
+      let recipients = [];
+
+      if (emailData.recipient !== 'custom') {
+        // Use predefined group
+        const selectedGroup = recipientOptions.find(o => o.value === emailData.recipient);
+        recipients = selectedGroup ? [`${selectedGroup.count} customers (${selectedGroup.label})`] : [];
+      } else {
+        // Parse custom emails
+        const emails = emailData.customEmails
+          .split(/[\n,]+/)
+          .map(e => e.trim())
+          .filter(e => e.length > 0 && e.includes('@'));
+        recipients = emails;
+      }
+
+      const finalEmailData = {
+        subject: subject || 'Untitled Email',
+        recipients: recipients,
+        recipientCount: recipients.length,
+        recipientType: emailData.recipient === 'custom' ? 'custom' : emailData.recipient,
+        htmlContent: html,
+        designJson: design,
+        templateUsed: selectedTemplate,
+        sentAt: new Date().toISOString(),
+      };
+
+      console.log('EMAIL READY TO SEND:', finalEmailData);
+      alert(`Email prepared for ${finalEmailData.recipientCount} recipient(s)! Check console.`);
+    });
+  };
 
   const recipientOptions = [
     { value: 'all', label: 'All Customers', count: 24 },
@@ -55,244 +66,204 @@ const EmailSection = () => {
     { value: 'custom', label: 'Custom Selection', count: 0 }
   ]
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setEmailData(prev => ({ ...prev, [name]: value }))
-  }
+  const templates = [
+    { id: 'blank', name: 'Blank Template', icon: 'Blank' },
+    { id: 'welcome', name: 'Welcome Email', icon: 'Welcome' },
+    { id: 'promotion', name: 'Promotion', icon: 'Gift' },
+    { id: 'newsletter', name: 'Newsletter', icon: 'Newspaper' },
+  ];
 
-  const handleTemplateSelect = (templateId) => {
-    setEmailData(prev => ({ ...prev, template: templateId }))
+  // Load template into editor
+  const loadTemplate = (templateId) => {
+    const unlayer = emailEditorRef.current?.editor;
+    if (!unlayer) return;
 
-    // Pre-fill content based on template
-    if (templateId === 'welcome') {
-      setEmailData(prev => ({
-        ...prev,
-        subject: 'Welcome to Catered by Africa!',
-        body: 'Dear Customer,\n\nWelcome to Catered by Africa! We\'re thrilled to have you join our community.\n\nAs a special welcome gift, enjoy 15% off your first order with code: WELCOME15\n\nExplore our menu and discover authentic African cuisine delivered to your door.\n\nBest regards,\nThe Catered by Africa Team'
-      }))
+    setSelectedTemplate(templateId);
+
+    if (templateId === 'blank') {
+      unlayer.loadDesign({ body: { rows: [] } });
+      setSubject('');
+    } else if (templateId === 'welcome') {
+      unlayer.loadDesign({
+        body: {
+          rows: [
+            {
+              cells: [1],
+              columns: [{
+                contents: [
+                  { type: 'text', values: { text: '<h1 style="text-align:center;color:#2563eb;">Welcome to Catered by Africa! 👋</h1>' } },
+                  { type: 'text', values: { text: '<p style="font-size:16px;text-align:center;">We\'re so excited to have you join our community of food lovers enjoying authentic African cuisine.</p>' } },
+                  { type: 'image', values: { src: { url: 'https://via.placeholder.com/600x300/10b981/ffffff?text=Delicious+Meals+Delivered' } } },
+                  { type: 'text', values: { text: '<p style="text-align:center;margin-top:20px;">As a welcome gift, enjoy <strong>15% off</strong> your first order with code: <strong>WELCOME15</strong></p>' } },
+                  { type: 'button', values: { text: 'Start Ordering →', href: 'https://caterply.com/menu', backgroundColor: '#10b981', color: '#ffffff' } }
+                ]
+              }]
+            }
+          ]
+        }
+      });
+      setSubject('Welcome to Catered by Africa! 🎉');
     } else if (templateId === 'promotion') {
-      setEmailData(prev => ({
-        ...prev,
-        subject: 'Special Offer Just for You!',
-        body: 'Dear Customer,\n\nWe have an exclusive offer for you!\n\nGet 20% OFF on all orders this week. Use code: SAVE20\n\nDon\'t miss out on this amazing deal. Order now!\n\nBest regards,\nThe Catered by Africa Team'
-      }))
+      unlayer.loadDesign({
+        body: {
+          rows: [
+            {
+              cells: [1],
+              columns: [{
+                contents: [
+                  { type: 'text', values: { text: '<h1 style="text-align:center;color:#f59e0b;">🔥 Special Offer Just for You!</h1>' } },
+                  { type: 'text', values: { text: '<h2 style="text-align:center;">Get 20% OFF This Week</h2>' } },
+                  { type: 'image', values: { src: { url: 'https://via.placeholder.com/600x400/f59e0b/ffffff?text=Save+Big+Today!' } } },
+                  { type: 'text', values: { text: '<p style="text-align:center;font-size:18px;margin:20px 0;">Use code <strong>SAVE20</strong> at checkout</p>' } },
+                  { type: 'button', values: { text: 'Claim Offer Now', href: 'https://caterply.com/order', backgroundColor: '#f59e0b', color: '#ffffff' } }
+                ]
+              }]
+            }
+          ]
+        }
+      });
+      setSubject('Exclusive: 20% Off Your Next Order!');
+    } else if (templateId === 'newsletter') {
+      unlayer.loadDesign({
+        body: {
+          rows: [
+            {
+              cells: [1],
+              columns: [{
+                contents: [
+                  { type: 'text', values: { text: '<h1 style="text-align:center;color:#7c3aed;">📰 This Week\'s Newsletter</h1>' } },
+                  { type: 'text', values: { text: '<p style="text-align:center;">New menu items, customer stories, and more!</p>' } },
+                  { type: 'image', values: { src: { url: 'https://via.placeholder.com/600x300/7c3aed/ffffff?text=Featured+Dish+of+the+Week' } } },
+                  { type: 'text', values: { text: '<h3>New Arrival: Jollof Rice Deluxe</h3><p>Rich, flavorful, and made with love — now available!</p>' } },
+                  { type: 'button', values: { text: 'View Full Menu', href: 'https://caterply.com/menu', backgroundColor: '#7c3aed' } }
+                ]
+              }]
+            }
+          ]
+        }
+      });
+      setSubject('This Week at Catered by Africa');
     }
-  }
+  };
 
-  const handleSendEmail = () => {
-    // Simulate sending email
-    alert(`Email will be sent to: ${emailData.recipient}\nSubject: ${emailData.subject}`)
-    // Reset form
-    setEmailData({
-      recipient: 'all',
-      subject: '',
-      body: '',
-      template: 'blank'
-    })
-  }
+
+
+  const onReady = (unlayer) => {
+    console.log('Unlayer editor is ready!');
+    loadTemplate('blank'); // Start with blank
+  };
 
   return (
-    <div className="email-section-container">
+    <div className="email-editor-page">
       {/* Header */}
-      <div className="section-header">
-        <div>
-          <h2 className="section-title">Email Communication</h2>
-          <p className="section-description">Send emails to your customers</p>
-        </div>
+      <div className="email-editor-header">
+        <h2>Email Campaign Builder</h2>
+        <p>Design and send beautiful emails to  customers</p>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="email-layout">
-        {/* Email Composer */}
-        <div className="email-composer-card">
-          <div className="composer-header">
-            <h3>Compose Email</h3>
-            <span className="composer-subtitle">Create and send emails to your customers</span>
-          </div>
-
-          {/* Template Selector */}
-          <div className="form-group">
-            <label className="form-label">Email Template</label>
-            <div className="template-grid">
-              {templates.map((template) => (
-                <button
-                  key={template.id}
-                  className={`template-btn ${emailData.template === template.id ? 'active' : ''}`}
-                  onClick={() => handleTemplateSelect(template.id)}
-                >
-                  <span className="template-icon">{template.icon}</span>
-                  <span className="template-name">{template.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Recipient Selector */}
-          <div className="form-group">
-            <label className="form-label">Recipients</label>
-            <select
-              name="recipient"
-              value={emailData.recipient}
-              onChange={handleInputChange}
-              className="form-select"
+      {/* Template Selector */}
+      <div className="template-selector">
+        <label className="template-label">Choose a starting template:</label>
+        <div className="template-grid">
+          {templates.map((template) => (
+            <button
+              key={template.id}
+              className={`template-card ${selectedTemplate === template.id ? 'active' : ''}`}
+              onClick={() => loadTemplate(template.id)}
             >
-              {recipientOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label} ({option.count})
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="template-icon">{template.icon}</div>
+              <span className="template-name">{template.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Recipients</label>
 
-          {/* Subject */}
-          <div className="form-group">
-            <label className="form-label">Subject</label>
-            <input
-              type="text"
-              name="subject"
-              value={emailData.subject}
-              onChange={handleInputChange}
-              placeholder="Enter email subject..."
-              className="form-input"
-            />
-          </div>
+        {/* Predefined Recipient Groups */}
+        <select
+          name="recipient"
+          value={emailData.recipient === 'custom' ? 'custom' : emailData.recipient}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value !== 'custom') {
+              setEmailData(prev => ({ ...prev, recipient: value, customEmails: '' }));
+            } else {
+              setEmailData(prev => ({ ...prev, recipient: 'custom' }));
+            }
+          }}
+          className="form-select"
+        >
+          {recipientOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label} ({option.count})
+            </option>
+          ))}
+          <option value="custom">Custom List (Enter emails below)</option>
+        </select>
 
-          {/* Email Body */}
-          <div className="form-group">
-            <label className="form-label">Message</label>
+        {/* Custom Emails Input – Only shows when "Custom List" is selected */}
+        {emailData.recipient === 'custom' && (
+          <div className="custom-emails-container" style={{ marginTop: '1rem' }}>
             <textarea
-              name="body"
-              value={emailData.body}
+              name="customEmails"
+              value={emailData.customEmails || ''}
               onChange={handleInputChange}
-              placeholder="Write your email message here..."
+              placeholder="Enter email addresses (one per line or comma-separated)&#10;e.g.&#10;john@example.com&#10;mary@domain.com, peter@site.org"
               className="form-textarea"
-              rows="10"
+              rows="6"
             />
+            <p className="helper-text">
+              {emailData.customEmails
+                ? `${emailData.customEmails.split(/[\n,]+/).filter(e => e.trim()).length} email(s) entered`
+                : 'No emails entered yet'}
+            </p>
           </div>
+        )}
+      </div>
 
-          {/* Actions */}
-          <div className="composer-actions">
-            <button className="btn-secondary" onClick={() => setEmailData({ recipient: 'all', subject: '', body: '', template: 'blank' })}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 6h18" />
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-              </svg>
-              Clear
-            </button>
-            <button className="btn-secondary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                <polyline points="17 21 17 13 7 13 7 21" />
-                <polyline points="7 3 7 8 15 8" />
-              </svg>
-              Save Draft
-            </button>
-            <button className="btn-primary" onClick={handleSendEmail}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
-              Send Email
-            </button>
-          </div>
+      {/* Subject Input */}
+      <div className="subject-input-group">
+        <label>Subject Line</label>
+        <input
+          type="text"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          placeholder="Enter email subject..."
+          className="subject-input"
+        />
+      </div>
+
+      {/* Editor + Actions */}
+      <div className="editor-container">
+        <div className="editor-actions-bar">
+          <button
+            className="action-btn"
+            onClick={() => emailEditorRef.current?.editor?.exportHtml(data => console.log('Preview HTML:', data.html))}
+          >
+            Preview HTML
+          </button>
+
+          <button className="action-btn" onClick={handleSendEmail}>
+            Send Email
+          </button>
         </div>
 
-        {/* Email History & Stats */}
-        <div className="email-sidebar">
-          {/* Stats */}
-          <div className="email-stats-card">
-            <h4 className="stats-title">Email Statistics</h4>
-            <div className="email-stats-grid">
-              <div className="email-stat">
-                <div className="email-stat-icon sent">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="email-stat-value">47</p>
-                  <p className="email-stat-label">Sent This Month</p>
-                </div>
-              </div>
-
-              <div className="email-stat">
-                <div className="email-stat-icon open">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21.5 12.5c0 1-.5 2-1.5 2.5" />
-                    <path d="M2.5 12.5c0 1 .5 2 1.5 2.5" />
-                    <path d="M4 18c0-1 1-2 2-2" />
-                    <path d="M20 18c0-1-1-2-2-2" />
-                    <rect x="6" y="4" width="12" height="12" rx="2" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="email-stat-value">75%</p>
-                  <p className="email-stat-label">Avg Open Rate</p>
-                </div>
-              </div>
-
-              <div className="email-stat">
-                <div className="email-stat-icon click">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="email-stat-value">32%</p>
-                  <p className="email-stat-label">Avg Click Rate</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Emails */}
-          <div className="email-history-card">
-            <h4 className="history-title">Recent Emails</h4>
-            <div className="email-history-list">
-              {sentEmails.map((email) => (
-                <div key={email.id} className="email-history-item">
-                  <div className="email-history-header">
-                    <h5 className="email-history-subject">{email.subject}</h5>
-                    <span className="email-status-badge">{email.status}</span>
-                  </div>
-                  <div className="email-history-meta">
-                    <span className="email-meta-item">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                      {email.recipients} recipients
-                    </span>
-                    <span className="email-meta-item">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                      </svg>
-                      {email.sentDate}
-                    </span>
-                  </div>
-                  <div className="email-history-stats">
-                    <div className="email-mini-stat">
-                      <span className="mini-stat-label">Opened:</span>
-                      <span className="mini-stat-value">{email.openRate}</span>
-                    </div>
-                    <div className="email-mini-stat">
-                      <span className="mini-stat-label">Clicked:</span>
-                      <span className="mini-stat-value">{email.clickRate}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="unlayer-editor">
+          <EmailEditor
+            ref={emailEditorRef}
+            onReady={onReady}
+            style={{ minHeight: '700px', border: '1px solid var(--border-color)' }}
+            options={{
+              appearance: {
+                theme: 'dark', // try 'light' or 'modern_light'
+              },
+            }}
+          />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmailSection
+export default EmailEditorSection;
