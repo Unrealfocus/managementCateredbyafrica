@@ -243,6 +243,9 @@ const EmailEditorSection = () => {
           >
             Preview HTML
           </button>
+          <button className="action-btn" onClick={handleSendEmail}>
+            Save Draft
+          </button>
 
           <button className="action-btn" onClick={handleSendEmail}>
             Send Email
